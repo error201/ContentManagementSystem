@@ -1,5 +1,6 @@
 const inquirer = require('inquirer');
 const db = require("./db/myDatabase")
+const ctable = require("console.table");
 
 function prompts() {
     let empOption = [];
@@ -90,8 +91,9 @@ function prompts() {
                     name: 'empManager',
                 },
             ]).then((response) => {
-                db.addRole(response.empFirstName, response.empLastName, response.roleDept, response.empManager);
-                prompts();
+                db.addEmployee(response.empFirstName, response.empLastname, response.roleDept, response.empManager).then(() => {
+                    prompts();
+                })
             })
         } else if (response.choice === "Update an Employee Role") {
             db.getAllEmployees().then(data => {
@@ -122,12 +124,12 @@ function prompts() {
                 ]).then((response) => {
                     console.log(response.empChoice, response.roleOption);
                     db.updateEmployeeRole(response.empChoice, response.roleOption);
-                }).then(()=>{
+                }).then(() => {
                     prompts();
                 })
-                
+
             })
-        } else if (response.choice === "Quit"){
+        } else if (response.choice === "Quit") {
             process.exit();
         }
     }
